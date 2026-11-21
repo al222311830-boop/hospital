@@ -1,22 +1,15 @@
-
 import os
-from pathlib import Path
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Buscar el archivo .env junto a database.py
-BASE_DIR = Path(__file__).resolve().parent
-ENV_FILE = BASE_DIR / ".env"
+# Carga .env solo si existe (en local)
+load_dotenv()
 
-load_dotenv(dotenv_path=ENV_FILE, override=True)
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-DATABASE_URL = os.getenv("DATABASE_URL=postgresql://postgres:Gamer2922.""@db.ddmxqevgnhgjdefwydoy.supabase.co:5432/postgres")
-
-if not DATABASE_URL:
-    raise ValueError(
-        f"No se encontro DATABASE_URL. Revisa este archivo: {ENV_FILE}"
-    )
+if DATABASE_URL is None:
+    raise Exception("DATABASE_URL no configurada")
 
 engine = create_engine(
     DATABASE_URL,
