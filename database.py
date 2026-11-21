@@ -11,7 +11,7 @@ ENV_FILE = BASE_DIR / ".env"
 
 load_dotenv(dotenv_path=ENV_FILE, override=True)
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL=postgresql://postgres:Gamer2922.""@db.ddmxqevgnhgjdefwydoy.supabase.co:5432/postgres")
 
 if not DATABASE_URL:
     raise ValueError(
