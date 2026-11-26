@@ -28,11 +28,9 @@ class CambiarEstado(BaseModel):
     estado: Literal["alta", "urgencias", "piso", "reposo"]
 
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def inicio():
-    return {
-        "mensaje": "API del Hospital funcionando correctamente"
-    }
+    return RedirectResponse(url="/docs")
 
 
 # REGISTRAR PACIENTE
