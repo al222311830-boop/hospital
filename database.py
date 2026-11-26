@@ -3,12 +3,12 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Carga .env solo si existe (en local)
+# Carga variables de entorno
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-if DATABASE_URL is None:
+if not DATABASE_URL:
     raise Exception("DATABASE_URL no configurada")
 
 engine = create_engine(
@@ -23,6 +23,7 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+
 
 def get_db():
     db = SessionLocal()
