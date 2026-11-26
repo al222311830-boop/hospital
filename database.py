@@ -10,6 +10,13 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise Exception("DATABASE_URL no configurada")
 
+# Forzar psycopg2
+DATABASE_URL = DATABASE_URL.replace(
+    "postgresql://",
+    "postgresql+psycopg2://",
+    1
+)
+
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True
@@ -22,6 +29,7 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
+
 
 def get_db():
     db = SessionLocal()
