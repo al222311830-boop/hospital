@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import engine, get_db
-from database import Base
+from database import engine, get_db, Base
 from models import Paciente
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
@@ -42,7 +41,6 @@ def registrar_paciente(
     datos: PacienteCrear,
     db: Session = Depends(get_db)
 ):
-
     paciente = Paciente(**datos.model_dump())
 
     db.add(paciente)
@@ -58,7 +56,6 @@ def registrar_paciente(
 # MOSTRAR TODOS LOS PACIENTES
 @app.get("/pacientes")
 def mostrar_pacientes(db: Session = Depends(get_db)):
-
     return db.query(Paciente).all()
 
 
@@ -68,13 +65,15 @@ def buscar_paciente(
     id: int,
     db: Session = Depends(get_db)
 ):
-
     paciente = db.query(Paciente).filter(
         Paciente.id == id
     ).first()
 
     if not paciente:
-        raise HTTPException(404, "Paciente no encontrado")
+        raise HTTPException(
+            status_code=404,
+            detail="Paciente no encontrado"
+        )
 
     return paciente
 
@@ -85,7 +84,6 @@ def pacientes_por_estado(
     estado: Literal["alta", "urgencias", "piso", "reposo"],
     db: Session = Depends(get_db)
 ):
-
     return db.query(Paciente).filter(
         Paciente.estado == estado
     ).all()
@@ -98,13 +96,15 @@ def cambiar_estado(
     datos: CambiarEstado,
     db: Session = Depends(get_db)
 ):
-
     paciente = db.query(Paciente).filter(
         Paciente.id == id
     ).first()
 
     if not paciente:
-        raise HTTPException(404, "Paciente no encontrado")
+        raise HTTPException(
+            status_code=404,
+            detail="Paciente no encontrado"
+        )
 
     paciente.estado = datos.estado
 
@@ -123,13 +123,15 @@ def eliminar_paciente(
     id: int,
     db: Session = Depends(get_db)
 ):
-
     paciente = db.query(Paciente).filter(
         Paciente.id == id
     ).first()
 
     if not paciente:
-        raise HTTPException(404, "Paciente no encontrado")
+        raise HTTPException(
+            status_code=404,
+            detail="Paciente no encontrado"
+        )
 
     db.delete(paciente)
     db.commit()
@@ -142,13 +144,11 @@ def eliminar_paciente(
 # CONTAR PACIENTES POR ESTADO
 @app.get("/estadisticas")
 def estadisticas(db: Session = Depends(get_db)):
-
     estados = ["alta", "urgencias", "piso", "reposo"]
 
     resultado = {}
 
     for estado in estados:
-
         cantidad = db.query(Paciente).filter(
             Paciente.estado == estado
         ).count()
