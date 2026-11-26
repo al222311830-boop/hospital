@@ -4,6 +4,7 @@ from database import engine, get_db, Base
 from models import Paciente
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
+from fastapi.responses import RedirectResponse
 
 app = FastAPI(
     title="API Hospitalaria",
